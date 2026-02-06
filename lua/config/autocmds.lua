@@ -8,21 +8,16 @@ vim.api.nvim_create_autocmd({ "FocusGained", "TermClose", "TermLeave" }, {
 
 vim.api.nvim_create_autocmd("BufWritePre", {
   group = my_autocmds,
-  callback = function(args)
-    vim.cmd("%s/\\s\\+$//e")
-
-    local clients = vim.lsp.get_clients({ bufnr = args.buf })
-    local has_formatter = false
-    for _, client in ipairs(clients) do
-      if client:supports_method("textDocument/formatting") then
-        has_formatter = true
-        break
-      end
-    end
-
-    if has_formatter then
-      vim.lsp.buf.format({ async = false, timeout_ms = 1000, bufnr = args.buf })
-    end
+  callback = function()
+    vim.cmd([[%s/\s\+$//e]])
   end,
-  desc = "Trim whitespace and Format with LSP on save",
+  desc = "Trim trailing whitespace on save",
+})
+
+vim.api.nvim_create_autocmd("BufWritePost", {
+  group = my_autocmds,
+  callback = function(args)
+    vim.lsp.buf.format({ bufnr = args.buf, timeout_ms = 1000 })
+  end,
+  desc = "Format with LSP after save",
 })

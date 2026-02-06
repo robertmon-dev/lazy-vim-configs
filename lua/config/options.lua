@@ -9,7 +9,7 @@ local font_name = "JetBrainsMonoNL Nerd Font"
 local font_size = ":h12"
 
 if vim.fn.has("gui_running") then
-  vim.opt.guifont = { font_name, font_size }
+  vim.opt.guifont = font_name .. font_size
 end
 
 vim.filetype.add({
@@ -32,14 +32,14 @@ if vim.g.neovide then
   vim.g.neovide_cursor_vfx_mode = "railgun"
   vim.g.neovide_cursor_vfx_opacity = 200.0
 
-  local bg_hex = p.bg_night .. "c7"
+  local bg_hex = p.bg_night
 
-  vim.api.nvim_set_hl(0, "Normal", { guibg = bg_hex })
-  vim.api.nvim_set_hl(0, "EndOfBuffer", { guibg = bg_hex })
-  vim.api.nvim_set_hl(0, "SignColumn", { guibg = bg_hex })
-  vim.api.nvim_set_hl(0, "LineNr", { guibg = bg_hex, fg = p.slate })
+  vim.api.nvim_set_hl(0, "Normal", { bg = bg_hex })
+  vim.api.nvim_set_hl(0, "EndOfBuffer", { bg = bg_hex })
+  vim.api.nvim_set_hl(0, "SignColumn", { bg = bg_hex })
+  vim.api.nvim_set_hl(0, "LineNr", { bg = bg_hex, fg = p.slate })
 
-  vim.api.nvim_set_hl(0, "Cursor", { guibg = p.info, guifg = p.bg_night })
+  vim.api.nvim_set_hl(0, "Cursor", { bg = p.info, fg = p.bg_night })
 
   vim.g.neovide_remember_window_size = true
   vim.o.winblend = 0
