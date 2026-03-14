@@ -27,9 +27,7 @@ return {
           languages = {
             gitcommit = {
               {
-                lintCommand = 'sh -c \'awk "/^#/ {exit} {print}" | commitlint --config ' .. vim.fn.expand(
-                  "~/.commitlintrc.json"
-                ) .. " --color=false'",
+                lintCommand = "sh -c 'awk \"/^#/ {exit} {print}\" | smart-commitlint --color=false'",
                 lintStdin = true,
                 lintFormats = { "%m" },
               },
