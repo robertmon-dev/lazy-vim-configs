@@ -17,9 +17,8 @@ vim.filetype.add({
 })
 
 if vim.g.neovide then
-  vim.o.guifont = font_name .. font_size
-
   local pad = 25
+  vim.g.neovide_scale_factor = 1.0
   vim.g.neovide_padding_top = pad
   vim.g.neovide_padding_bottom = pad
   vim.g.neovide_padding_left = pad

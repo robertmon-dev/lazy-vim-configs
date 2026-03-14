@@ -1,35 +1,35 @@
-local opts = { noremap = true, silent = true }
 local map = vim.keymap.set
 
 vim.g.mapleader = " "
 vim.o.timeoutlen = 300
 
+local default_opts = { silent = true }
+
 local keymaps = {
   n = {
-    { "<Tab>", ">>", opts },
-    { "<S-Tab>", "<<", opts },
+    { "<Tab>", ">>" },
+    { "<S-Tab>", "<<" },
 
-    { "<leader>a", "ggVG", opts },
-    { "<leader>d", "<cmd>lua vim.lsp.buf.definition()<cr>", { desc = "Go to definition" } },
-    { "<leader>r", "<cmd>lua vim.lsp.buf.references()<cr>", { desc = "Find references" } },
+    { "<leader>a", "ggVG" },
 
-    { "<leader>h", "<cmd>lua vim.lsp.buf.hover()<cr>", { desc = "Show hover info" } },
+    { "<leader>d", vim.lsp.buf.definition, { desc = "Go to definition" } },
+    { "<leader>r", vim.lsp.buf.references, { desc = "Find references" } },
+    { "<leader>h", vim.lsp.buf.hover, { desc = "Show hover info" } },
+    { "<leader>D", vim.lsp.buf.declaration, { desc = "Go to declaration" } },
+    { "<leader>E", vim.diagnostic.open_float, { desc = "Show line diagnostics" } },
 
-    { "<leader>D", "<cmd>lua vim.lsp.buf.declaration()<cr>", { desc = "Go to declaration" } },
-    { "<C-s>", ":w<cr>", { desc = "Save file" } },
-    { "<leader>q", ":q<cr>", { desc = "Close buffers" } },
+    { "[d", vim.diagnostic.goto_prev, { desc = "Go to previous diagnostic" } },
+    { "]d", vim.diagnostic.goto_next, { desc = "Go to next diagnostic" } },
 
-    { "<leader>c", ":bd<cr>", { desc = "Close currently open buffer (bd)" } },
+    { "<C-s>", "<cmd>w<cr>", { desc = "Save file" } },
+    { "<leader>q", "<cmd>q<cr>", { desc = "Close window" } },
+    { "<leader>c", "<cmd>bd<cr>", { desc = "Close currently open buffer (bd)" } },
+
+    { "<leader>cn", "<cmd>CarbonNow<cr>", { desc = "Carbon Now (normal, whole file)" } },
+    { "<leader>cs", "<cmd>Silicon<cr>", { desc = "Silicon (marked)" } },
 
     {
-      "<leader>cn",
-      ":CarbonNow<cr>",
-      mode = "v",
-      desc = "Carbon Now (normal, whole file)",
-    },
-
-    {
-      "<leader><S-c>",
+      "<leader>C",
       function()
         require("Comment.api").toggle.blockwise.current()
       end,
@@ -64,40 +64,39 @@ local keymaps = {
     { "<leader>gA", "<cmd>G add --all<cr>", { desc = "Git add all" } },
     { "<leader>gr", "<cmd>GDelete<cr>", { desc = "Git remove (current file)" } },
     { "<leader>gM", "<cmd>G switch main<cr>", { desc = "Git switch main" } },
-    { "<leader>gRm", "<cmd>G rebase origin/main <cr>", { desc = "Git rebase main" } },
+    { "<leader>gRm", "<cmd>G rebase origin/main<cr>", { desc = "Git rebase main" } },
     { "<leader>gU", "<cmd>G add -u<cr>", { desc = "Git add -u" } },
     { "<leader>gu", "<cmd>G reset HEAD %<cr>", { desc = "Git unstage (current file)" } },
     { "<leader>gP", "<cmd>G push<cr>", { desc = "Git push" } },
     { "<leader>gPP", "<cmd>G push --force-with-lease<cr>", { desc = "Git push force with lease" } },
     { "<leader>gPPP", "<cmd>G push --force<cr>", { desc = "Git push with force" } },
-    { "<leader>go", ":G checkout ", { desc = "Git checkout (existing)" } },
+
+    { "<leader>go", ":G checkout ", { desc = "Git checkout (existing)", silent = false } },
+
     { "<leader>gL", "<cmd>G pull<cr>", { desc = "Git pull" } },
     { "<leader>gS", "<cmd>G stash<cr>", { desc = "Git stash" } },
     { "<leader>gSp", "<cmd>G stash pop<cr>", { desc = "Git stash pop" } },
     { "<leader>gSa", "<cmd>G stash apply<cr>", { desc = "Git stash apply" } },
     { "<leader>gR", "<cmd>G restore --all<cr>", { desc = "Git restore" } },
     { "<leader>gl", "<cmd>G stash list<cr>", { desc = "Git stash list" } },
-
-    { "<leader>E", "<cmd>lua vim.diagnostic.open_float()<cr>", { desc = "Show line diagnostics" } },
-    { "[d", "<cmd>lua vim.diagnostic.goto_prev()<cr>", { desc = "Go to previous diagnostic" } },
-    { "]d", "<cmd>lua vim.diagnostic.goto_next()<cr>", { desc = "Go to next diagnostic" } },
+    { "<leader>gX", "<cmd>G reset HEAD~1<cr>", { desc = "Git undo last commit (reset HEAD~1)" } },
   },
 
   v = {
-    { "<Tab>", ">gv", opts },
-    { "<S-Tab>", "<gv", opts },
+    { "<Tab>", ">gv" },
+    { "<S-Tab>", "<gv" },
     {
-      "<leader><S-c>",
+      "<leader>C",
       "<esc><cmd>lua require('Comment.api').toggle.blockwise(vim.fn.visualmode())<CR>",
       { desc = "Toggle comment" },
     },
-    { "<leader>cn", ":CarbonNow<cr>", { desc = "Carbon Now (marked)" } },
+    { "<leader>cn", "<cmd>CarbonNow<cr>", { desc = "Carbon Now (marked)" } },
   },
 
   i = {
-    { "<S-Tab>", "<C-d>", opts },
+    { "<S-Tab>", "<C-d>" },
     {
-      "<leader><S-c>",
+      "<leader>C",
       "<Esc><cmd>lua require('Comment.api').toggle.blockwise.current()<CR>a",
       { desc = "Toggle comment" },
     },
@@ -106,7 +105,32 @@ local keymaps = {
 
 for mode, maps_table in pairs(keymaps) do
   for _, mapping in ipairs(maps_table) do
-    local m_opts = mapping[3] or {}
+    local m_opts = vim.tbl_extend("force", default_opts, mapping[3] or {})
     map(mode, mapping[1], mapping[2], m_opts)
+  end
+end
+
+if vim.g.neovide then
+  local function zoom(factor)
+    vim.g.neovide_scale_factor = vim.g.neovide_scale_factor * factor
+  end
+
+  local mappings = {
+    ["<C-=>"] = function()
+      zoom(1.1)
+    end,
+    ["<C-+>"] = function()
+      zoom(1.1)
+    end,
+    ["<C-->"] = function()
+      zoom(1 / 1.1)
+    end,
+    ["<C-0>"] = function()
+      vim.g.neovide_scale_factor = 1
+    end,
+  }
+
+  for key, func in pairs(mappings) do
+    vim.keymap.set({ "n", "v" }, key, func)
   end
 end
