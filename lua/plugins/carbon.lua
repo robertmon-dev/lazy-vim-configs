@@ -8,13 +8,17 @@ return {
     open_cmd = "xdg-open",
     options = {
       bg = p.bg_night,
-      theme = "tokyonight",
+
+      theme = "night-owl",
 
       font_family = "JetBrains Mono",
       font_size = "18px",
       line_numbers = true,
 
+      watermark = false,
+
       window_theme = "none",
+
       width_adjustment = true,
       padding_vertical = "56px",
       padding_horizontal = "56px",
