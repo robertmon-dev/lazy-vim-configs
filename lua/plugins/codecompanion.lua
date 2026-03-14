@@ -7,6 +7,7 @@ return {
     "nvim-telescope/telescope.nvim",
     "stevearc/dressing.nvim",
   },
+  cmd = { "CodeCompanion", "CodeCompanionActions", "CodeCompanionChat", "CodeCompanionCmd" },
   config = function()
     require("codecompanion").setup({
       strategies = {

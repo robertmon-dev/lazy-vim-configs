@@ -60,7 +60,10 @@ local keymaps = {
     { "<leader>gs", "<cmd>G<cr>", { desc = "Git status" } },
     { "<leader>gd", "<cmd>Gdiffsplit<cr>", { desc = "Git diff" } },
     { "<leader>ga", "<cmd>Gwrite<cr>", { desc = "Git add (current buffer)" } },
-    { "<leader>gc", "<cmd>G commit<cr>", { desc = "Git commit" } },
+
+    { "<leader>gc", "<cmd>CodeCompanion /commit<cr>", { desc = "AI Git commit (CodeCompanion)" } },
+    { "<leader>gC", "<cmd>G commit<cr>", { desc = "Manual Git commit (Fugitive)" } },
+
     { "<leader>gA", "<cmd>G add --all<cr>", { desc = "Git add all" } },
     { "<leader>gr", "<cmd>GDelete<cr>", { desc = "Git remove (current file)" } },
     { "<leader>gM", "<cmd>G switch main<cr>", { desc = "Git switch main" } },
