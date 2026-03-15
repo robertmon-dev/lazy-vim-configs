@@ -72,8 +72,29 @@ Based on the following 'git diff', generate an ideal commit message for me:
     })
   end,
   keys = {
-    { "<leader>ca", "<cmd>CodeCompanionActions<cr>", mode = { "n", "v" }, desc = "CodeCompanion Actions" },
-    { "<leader>cc", "<cmd>CodeCompanionChat Toggle<cr>", mode = { "n", "v" }, desc = "CodeCompanion Chat" },
-    { "ga", "<cmd>CodeCompanionChat Add<cr>", mode = "v", desc = "CodeCompanion Add to Chat" },
+    {
+      "<leader>ca",
+      "<cmd>CodeCompanionActions<cr>",
+      mode = { "n", "v" },
+      desc = "CodeCompanion Actions",
+    },
+    {
+      "<leader>cc",
+      "<cmd>CodeCompanionChat Toggle<cr>",
+      mode = { "n", "v" },
+      desc = "CodeCompanion Chat",
+    },
+    {
+      "ga",
+      "<cmd>CodeCompanionChat Add<cr>",
+      mode = "v",
+      desc = "CodeCompanion Add to Chat",
+    },
+    {
+      "<leader>gcc",
+      "<cmd>lua require('codecompanion').prompt('commit')<cr>",
+      mode = "n",
+      desc = "AI Git Commit",
+    },
   },
 }

@@ -63,16 +63,32 @@ local keymaps = {
     { "<leader>ga", "<cmd>Gwrite<cr>", { desc = "Git add (current buffer)" } },
 
     { "<leader>gc", git_funcs.ai_commit_with_select, { desc = "AI Git commit (Menu)" } },
-    { "<leader>gC", "<cmd>G commit<cr>", { desc = "Manual Git commit (Fugitive)" } },
-    { "<leader>gcc", "<cmd>CodeCompanion /commit<cr>", { desc = "AI Commit (Chat Copy)" } },
+    {
+      "<leader>gC",
+      "<cmd>G commit<cr>",
+      { desc = "Manual Git commit (Fugitive)" },
+    },
+    { "<leader>gcc", "<cmd>lua require('codecompanion').prompt('commit')<cr>", { desc = "AI Commit (Direct)" } },
 
-    { "<leader>gr", "<cmd>GDelete<cr>", { desc = "Git remove (current file)" } },
+    {
+      "<leader>gr",
+      "<cmd>GDelete<cr>",
+      { desc = "Git remove (current file)" },
+    },
     { "<leader>gM", "<cmd>G switch main<cr>", { desc = "Git switch main" } },
     { "<leader>gRm", "<cmd>G rebase origin/main<cr>", { desc = "Git rebase main" } },
     { "<leader>gU", "<cmd>G add -u<cr>", { desc = "Git add -u" } },
-    { "<leader>gu", "<cmd>G reset HEAD %<cr>", { desc = "Git unstage (current file)" } },
+    {
+      "<leader>gu",
+      "<cmd>G reset HEAD %<cr>",
+      { desc = "Git unstage (current file)" },
+    },
     { "<leader>gP", "<cmd>G push<cr>", { desc = "Git push" } },
-    { "<leader>gPP", "<cmd>G push --force-with-lease<cr>", { desc = "Git push force with lease" } },
+    {
+      "<leader>gPP",
+      "<cmd>G push --force-with-lease<cr>",
+      { desc = "Git push force with lease" },
+    },
     { "<leader>gPPP", "<cmd>G push --force<cr>", { desc = "Git push with force" } },
 
     {

@@ -10,9 +10,16 @@ end
 
 local function build_curl_cmd(provider, diff)
   local prompt_template = [[
-You are an expert in the Conventional Commits standard.
-Based on the following 'git diff', provide exactly 3 concise commit message options.
-Return ONLY a list of strings, each on a new line, starting with the conventional commit type.
+You are an expert developer strictly adhering to the Conventional Commits specification.
+Based on the following 'git diff', provide exactly 3 alternative commit message options.
+
+RULES:
+1. Format MUST be: `<type>[optional scope][optional !]: <description>`
+2. `type` MUST be one of: feat, fix, docs, style, refactor, perf, test, build, ci, chore, revert.
+3. You MUST include a longer commit body (lanie wody) explaining WHAT changed and WHY.
+4. The body MUST begin exactly one blank line after the description.
+5. Separate each of the 3 complete options with exactly this string: `===OPTION===`
+6. DO NOT wrap the response in markdown blocks. Return plain text only.
 
 Diff:
 %s
@@ -26,7 +33,7 @@ Diff:
     end
 
     local payload = {
-      model = "claude-3-5-sonnet-20240620",
+      model = "claude-3-5-sonnet-20241022",
       max_tokens = 1024,
       messages = { { role = "user", content = prompt } },
     }
@@ -51,7 +58,7 @@ Diff:
     end
 
     local payload = {
-      model = "gpt-4o-mini",
+      model = "gpt-4o",
       messages = { { role = "user", content = prompt } },
     }
 
@@ -114,29 +121,49 @@ local function parse_api_response(provider, raw_data)
   end
 
   local options = {}
-  for s in content:gmatch("[^\r\n]+") do
-    local cleaned = s:gsub("^%d+%.%s*", ""):gsub("^[%s%-]*", "")
+  local start_idx = 1
+  local separator = "===OPTION==="
 
-    if cleaned:match("^%w+[^:]*:") then
-      table.insert(options, cleaned)
+  while true do
+    local s, e = content:find(separator, start_idx, true)
+    if not s then
+      local rest = vim.trim(content:sub(start_idx))
+      if rest ~= "" then
+        table.insert(options, rest)
+      end
+      break
     end
+    local opt = vim.trim(content:sub(start_idx, s - 1))
+    if opt ~= "" then
+      table.insert(options, opt)
+    end
+    start_idx = e + 1
   end
 
   return #options > 0 and options or nil, "Could not find valid commit messages in the text."
 end
 
 local function schedule_ui_and_commit(options)
+  local display_items = {}
+  for i, opt in ipairs(options) do
+    local first_line = opt:match("([^\r\n]+)")
+    table.insert(display_items, string.format("%d: %s", i, first_line))
+  end
+
   vim.schedule(function()
-    vim.ui.select(options, {
+    vim.ui.select(display_items, {
       prompt = "Select commit message:",
-    }, function(choice)
-      if choice then
-        vim.cmd("G commit --no-gpg-sign")
+    }, function(choice, idx)
+      if choice and idx then
+        vim.cmd("G commit")
 
         local buf = vim.api.nvim_get_current_buf()
+        local lines = vim.split(options[idx], "\n")
+        vim.api.nvim_buf_set_lines(buf, 0, 1, false, lines)
 
-        vim.api.nvim_buf_set_lines(buf, 0, 1, false, { choice, "" })
-        vim.api.nvim_win_set_cursor(0, { 1, #choice })
+        local last_line = #lines
+        local last_col = #lines[last_line]
+        vim.api.nvim_win_set_cursor(0, { last_line, last_col })
 
         vim.cmd("startinsert!")
       end
