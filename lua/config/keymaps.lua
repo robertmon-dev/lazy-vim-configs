@@ -74,7 +74,11 @@ local keymaps = {
     { "<leader>gPP", "<cmd>G push --force-with-lease<cr>", { desc = "Git push force with lease" } },
     { "<leader>gPPP", "<cmd>G push --force<cr>", { desc = "Git push with force" } },
 
-    { "<leader>go", ":G checkout ", { desc = "Git checkout (existing)", silent = false } },
+    {
+      "<leader>go",
+      "<cmd>Telescope git_branches<cr>",
+      { desc = "Git branches list (Telescope)" },
+    },
 
     { "<leader>gL", "<cmd>G pull<cr>", { desc = "Git pull" } },
     { "<leader>gS", "<cmd>G stash<cr>", { desc = "Git stash" } },
