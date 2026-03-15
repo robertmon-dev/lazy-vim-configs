@@ -1,4 +1,5 @@
 local map = vim.keymap.set
+local git_funcs = require("functions.git")
 
 vim.g.mapleader = " "
 vim.o.timeoutlen = 300
@@ -10,7 +11,7 @@ local keymaps = {
     { "<Tab>", ">>" },
     { "<S-Tab>", "<<" },
 
-    { "<leader>a", "ggVG" },
+    { "<leader>a", "ggVG", { desc = "Select all text" } },
 
     { "<leader>d", vim.lsp.buf.definition, { desc = "Go to definition" } },
     { "<leader>r", vim.lsp.buf.references, { desc = "Find references" } },
@@ -61,8 +62,9 @@ local keymaps = {
     { "<leader>gd", "<cmd>Gdiffsplit<cr>", { desc = "Git diff" } },
     { "<leader>ga", "<cmd>Gwrite<cr>", { desc = "Git add (current buffer)" } },
 
-    { "<leader>gc", "<cmd>CodeCompanion /commit<cr>", { desc = "AI Git commit (CodeCompanion)" } },
+    { "<leader>gc", git_funcs.ai_commit_with_select, { desc = "AI Git commit (Menu)" } },
     { "<leader>gC", "<cmd>G commit<cr>", { desc = "Manual Git commit (Fugitive)" } },
+    { "<leader>gcc", "<cmd>CodeCompanion /commit<cr>", { desc = "AI Commit (Chat Copy)" } },
 
     { "<leader>gA", "<cmd>G add --all<cr>", { desc = "Git add all" } },
     { "<leader>gr", "<cmd>GDelete<cr>", { desc = "Git remove (current file)" } },
