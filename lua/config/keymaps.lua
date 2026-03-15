@@ -66,7 +66,6 @@ local keymaps = {
     { "<leader>gC", "<cmd>G commit<cr>", { desc = "Manual Git commit (Fugitive)" } },
     { "<leader>gcc", "<cmd>CodeCompanion /commit<cr>", { desc = "AI Commit (Chat Copy)" } },
 
-    { "<leader>gA", "<cmd>G add --all<cr>", { desc = "Git add all" } },
     { "<leader>gr", "<cmd>GDelete<cr>", { desc = "Git remove (current file)" } },
     { "<leader>gM", "<cmd>G switch main<cr>", { desc = "Git switch main" } },
     { "<leader>gRm", "<cmd>G rebase origin/main<cr>", { desc = "Git rebase main" } },
