@@ -1,3 +1,6 @@
+bin/
+nvim-ai-engine
+
 lazy-lock.json
 tt.*
 .tests

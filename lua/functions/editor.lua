@@ -1,4 +1,5 @@
 local M = {}
+local Tele = _G.Tele or require("functions.logger")
 
 function M.diagnostic_goto_prev()
   vim.diagnostic.jump({ count = -1, float = true })
