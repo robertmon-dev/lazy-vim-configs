@@ -1,45 +1,41 @@
-local my_autocmds = vim.api.nvim_create_augroup("MyAutocmds", { clear = true })
+local editor_funcs = require("functions.editor")
+local my_group = vim.api.nvim_create_augroup("MyAutocmds", { clear = true })
 
-vim.api.nvim_create_autocmd({ "FocusGained", "TermClose", "TermLeave" }, {
-  group = my_autocmds,
-  command = "checktime",
-  desc = "Check if buffers changed on disk",
-})
+local autocmds = {
+  {
+    { "FocusGained", "TermClose", "TermLeave" },
+    {
+      command = "checktime",
+      desc = "Check if buffers changed on disk",
+    },
+  },
+  {
+    "BufWritePre",
+    {
+      callback = editor_funcs.trim_whitespace,
+      desc = "Trim trailing whitespace on save",
+    },
+  },
+  {
+    "BufWritePost",
+    {
+      callback = editor_funcs.format_lsp,
+      desc = "Format with LSP after save",
+    },
+  },
+  {
+    "BufReadPost",
+    {
+      pattern = "*",
+      callback = editor_funcs.check_readonly,
+      desc = "Show warning for readonly files",
+    },
+  },
+}
 
-vim.api.nvim_create_autocmd("BufWritePre", {
-  group = my_autocmds,
-  callback = function()
-    vim.cmd([[%s/\s\+$//e]])
-  end,
-  desc = "Trim trailing whitespace on save",
-})
+for _, au in ipairs(autocmds) do
+  local event = au[1]
+  local opts = vim.tbl_deep_extend("force", { group = my_group }, au[2] or {})
 
-vim.api.nvim_create_autocmd("BufWritePost", {
-  group = my_autocmds,
-  callback = function(args)
-    vim.lsp.buf.format({ bufnr = args.buf, timeout_ms = 1000 })
-  end,
-  desc = "Trim trailing whitespace on save",
-})
-
-vim.api.nvim_create_autocmd("BufWritePost", {
-  group = my_autocmds,
-  callback = function(args)
-    vim.lsp.buf.format({ bufnr = args.buf, timeout_ms = 1000 })
-  end,
-  desc = "Format with LSP after save",
-})
-
-vim.api.nvim_create_autocmd({ "BufReadPost" }, {
-  pattern = "*",
-  callback = function()
-    if vim.bo.readonly then
-      vim.defer_fn(function()
-        vim.api.nvim_echo({
-          { " ⚠️  WARNING: As this file is READONLY! \n", "WarningMsg" },
-          { " You can save changes only after password provided.\n", "Normal" },
-        }, true, {})
-      end, 500)
-    end
-  end,
-})
+  vim.api.nvim_create_autocmd(event, opts)
+end

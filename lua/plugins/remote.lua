@@ -1,3 +1,5 @@
+local editor_funcs = require("functions.editor")
+
 return {
   "amitds1997/remote-nvim.nvim",
   version = "*",
@@ -8,21 +10,12 @@ return {
   },
   config = function()
     require("remote-nvim").setup({
-
-      client_callback = function(port, _)
-        local cmd = ("nvim --server localhost:%s --remote-ui"):format(port)
-        vim.fn.jobstart(cmd, {
-          detach = true,
-          on_exit = function(_, _, _)
-            print("Disconnected with remote server.")
-          end,
-        })
-      end,
+      client_callback = editor_funcs.remote_nvim_callback,
     })
   end,
   keys = {
-    { "<leader>rs", "<cmd>RemoteStart<cr>", mode = "n", desc = "Remote SSH: Start" },
-    { "<leader>ri", "<cmd>RemoteInfo<cr>", mode = "n", desc = "Remote SSH: Info" },
-    { "<leader>rc", "<cmd>RemoteCleanup<cr>", mode = "n", desc = "Remote SSH: Cleanup Server" },
+    { "<leader>rs", "<cmd>RemoteStart<cr>", desc = "Remote SSH: Start" },
+    { "<leader>ri", "<cmd>RemoteInfo<cr>", desc = "Remote SSH: Info" },
+    { "<leader>rc", "<cmd>RemoteCleanup<cr>", desc = "Remote SSH: Cleanup Server" },
   },
 }
