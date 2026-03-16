@@ -96,6 +96,17 @@ local keymaps = {
       "<cmd>Telescope git_branches<cr>",
       { desc = "Git branches list (Telescope)" },
     },
+    {
+      "<leader>gO",
+      function()
+        vim.ui.input({ prompt = "Switch to branch: " }, function(branch)
+          if branch and branch ~= "" then
+            vim.cmd("G switch " .. branch)
+          end
+        end)
+      end,
+      { desc = "Git switch branch (Fugitive)" },
+    },
 
     { "<leader>gL", "<cmd>G pull<cr>", { desc = "Git pull" } },
     { "<leader>gS", "<cmd>G stash<cr>", { desc = "Git stash" } },
