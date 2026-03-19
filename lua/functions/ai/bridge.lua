@@ -13,9 +13,15 @@ function M.ensure_engine()
     rpc = true,
     on_stderr = function(_, data)
       local msg = table.concat(data, "\n"):gsub("^%s*(.-)%s*$", "%1")
-      if msg ~= "" then
-        Tele.error("Engine Runtime: " .. msg, "AI Bridge")
+      if msg == "" then
+        return
       end
+
+      if msg:sub(1, 1) == "{" then
+        return
+      end
+
+      Tele.error("Engine Runtime: " .. msg, "AI Bridge")
     end,
     on_exit = function(_, code)
       job_id = 0
