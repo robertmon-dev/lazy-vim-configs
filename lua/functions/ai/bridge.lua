@@ -12,17 +12,19 @@ function M.ensure_engine()
   job_id = vim.fn.jobstart({ bin_path }, {
     rpc = true,
     on_stderr = function(_, data)
-      if data and data[1] ~= "" then
-        print("Go Engine Stderr: " .. table.concat(data, "\n"))
+      local msg = table.concat(data, "\n"):gsub("^%s*(.-)%s*$", "%1")
+      if msg ~= "" then
+        Tele.error("Engine Runtime: " .. msg, "AI Bridge")
       end
     end,
     on_exit = function(_, code)
       job_id = 0
       if code ~= 0 and code ~= 141 then
-        Tele.error("Go Engine stopped with code " .. code, "AI Bridge")
+        Tele.warn("Engine stopped unexpectedly with code " .. code, "AI Bridge")
       end
     end,
   })
+
   return job_id
 end
 
@@ -31,7 +33,9 @@ local levels = { DEBUG = 0, INFO = 1, WARN = 2, ERROR = 3 }
 _G.NvimEngineLog = function(msg, lvl_str, sys)
   vim.schedule(function()
     local l = levels[lvl_str] or 1
-    Tele.log(msg, l, sys or "Go-Engine")
+    if l >= levels.INFO then
+      Tele.log(msg, l, sys or "Go-Engine")
+    end
   end)
 end
 
@@ -52,7 +56,10 @@ _G.on_ai_result = function(res)
       return
     end
 
-    vim.ui.select(res.data, { prompt = "Select commit message:" }, function(choice)
+    vim.ui.select(res.data, {
+      prompt = "Select commit message:",
+      kind = "ai_commit_picker",
+    }, function(choice)
       if choice then
         vim.cmd("G commit")
         vim.defer_fn(function()
