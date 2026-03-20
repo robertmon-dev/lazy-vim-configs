@@ -1,6 +1,6 @@
 local M = {}
 local job_id = 0
-local bin_path = vim.fn.expand("~/.config/nvim/bin/nvim-ai-engine")
+local bin_path = vim.g.ai_engine_bin_path or vim.fn.expand("~/.config/nvim/bin/nvim-ai-engine")
 
 local Tele = _G.Tele or require("functions.logger")
 
