@@ -1,4 +1,6 @@
 local keymap = vim.keymap.set
+
+local utils = require("functions.utils")
 local git_funcs = require("functions.git.git")
 local git_ai_funcs = require("functions.git.git_ai_commit")
 local editor_funcs = require("functions.editor")
@@ -7,7 +9,6 @@ vim.g.mapleader = " "
 vim.o.timeoutlen = 300
 
 local default_opts = { silent = true }
-
 local keymaps = {
   n = {
     { "<Tab>", ">>" },
@@ -132,11 +133,5 @@ local keymaps = {
   },
 }
 
-for mode, maps_table in pairs(keymaps) do
-  for _, mapping in ipairs(maps_table) do
-    local m_opts = vim.tbl_deep_extend("force", default_opts, mapping[3] or {})
-    keymap(mode, mapping[1], mapping[2], m_opts)
-  end
-end
-
+utils.apply_keymaps(keymaps, default_opts, keymap)
 editor_funcs.setup_neovide()

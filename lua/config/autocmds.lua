@@ -1,3 +1,4 @@
+local crates = require("crates")
 local utils = require("functions.utils")
 local editor_funcs = require("functions.editor")
 local rust_funcs = require("functions.rust_actions")
@@ -60,8 +61,6 @@ local autocmds = {
       pattern = "Cargo.toml",
       desc = "Crates.nvim specific keymaps",
       callback = function(event)
-        local crates = require("crates")
-
         local crates_keymaps = {
           { "<leader>cv", crates.show_versions_popup, { desc = "Crates: Show versions" } },
           { "<leader>cf", crates.show_features_popup, { desc = "Crates: Show flags (features)" } },
@@ -80,9 +79,4 @@ local autocmds = {
   },
 }
 
-for _, au in ipairs(autocmds) do
-  local event = au[1]
-  local opts = vim.tbl_deep_extend("force", { group = my_group }, au[2] or {})
-
-  vim.api.nvim_create_autocmd(event, opts)
-end
+utils.apply_common_autocmds(autocmds, my_group)
