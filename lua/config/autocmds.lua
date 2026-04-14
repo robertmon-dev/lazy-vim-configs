@@ -1,3 +1,4 @@
+local utils = require("functions.utils")
 local editor_funcs = require("functions.editor")
 local rust_funcs = require("functions.rust_actions")
 
@@ -48,11 +49,32 @@ local autocmds = {
           { "<leader>cM", rust_funcs.expand_macro, { desc = "Rust Expand Macro" } },
         }
 
-        local default_opts = { silent = true }
-        for _, mapping in ipairs(rust_keymaps) do
-          local m_opts = vim.tbl_deep_extend("force", default_opts, mapping[3] or {}, { buffer = event.buf })
-          vim.keymap.set("n", mapping[1], mapping[2], m_opts)
-        end
+        utils.apply_buffer_keymaps(rust_keymaps, event.buf)
+      end,
+    },
+  },
+
+  {
+    { "BufRead", "BufNewFile" },
+    {
+      pattern = "Cargo.toml",
+      desc = "Crates.nvim specific keymaps",
+      callback = function(event)
+        local crates = require("crates")
+
+        local crates_keymaps = {
+          { "<leader>cv", crates.show_versions_popup, { desc = "Crates: Show versions" } },
+          { "<leader>cf", crates.show_features_popup, { desc = "Crates: Show flags (features)" } },
+          { "<leader>cd", crates.show_dependencies_popup, { desc = "Crates: Show dependencies" } },
+          { "<leader>cu", crates.update_crate, { desc = "Crates: Update them all" } },
+          { "<leader>ca", crates.update_all_crates, { desc = "Crates: Update all" } },
+          { "<leader>cU", crates.upgrade_crate, { desc = "Crates: Bump crate (upgrade)" } },
+          { "<leader>cH", crates.open_homepage, { desc = "Crates: Show www of crate" } },
+          { "<leader>cD", crates.open_documentation, { desc = "Crates: Show docs.rs" } },
+          { "<leader>cR", crates.open_repository, { desc = "Crates: Show github of the crate" } },
+        }
+
+        utils.apply_buffer_keymaps(crates_keymaps, event.buf)
       end,
     },
   },
