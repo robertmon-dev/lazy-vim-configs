@@ -47,8 +47,8 @@ return {
         hl.NeoTreeNormal = { bg = my_bg }
         hl.NeoTreeNormalNC = { bg = my_bg }
         hl.NeoTreeEndOfBuffer = { bg = my_bg, fg = my_bg }
-        hl.NeoTreeWinSeparator = { fg = p.primary, bg = p.none }
-        hl.WinSeparator = { fg = p.primary, bg = p.none }
+        hl.NeoTreeWinSeparator = { fg = p.storm, bg = p.none }
+        hl.WinSeparator = { fg = p.storm, bg = p.none }
 
         hl.TelescopeNormal = { bg = my_bg }
         hl.TelescopeBorder = { bg = my_bg, fg = p.primary }

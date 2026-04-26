@@ -16,6 +16,17 @@ vim.filetype.add({
   pattern = { [".*/hypr/.*%.conf"] = "hyprlang" },
 })
 
+vim.opt.fillchars = {
+  vert = "┃",
+  horiz = "━",
+  horizup = "┻",
+  horizdown = "┳",
+  vertleft = "┨",
+  vertright = "┣",
+  verthoriz = "╋",
+  eob = " ",
+}
+
 if vim.g.neovide then
   local pad = 25
   vim.g.neovide_scale_factor = 1.0
