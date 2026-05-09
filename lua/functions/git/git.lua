@@ -1,30 +1,32 @@
 local M = {}
+local logger = require("functions.logger")
+local actions = require("telescope.actions")
+local action_state = require("telescope.actions.state")
 
 function M.telescope_git_branches()
   require("telescope.builtin").git_branches()
 end
 
+function M.switch_branch(prompt_bufnr)
+  local selection = action_state.get_selected_entry()
+  if not selection then
+    return
+  end
+  actions.close(prompt_bufnr)
+  local branch = selection.value
+  if branch:match("^origin/") then
+    branch = branch:gsub("^origin/", "")
+  elseif branch:match("^remotes/[^/]+/") then
+    branch = branch:gsub("^remotes/[^/]+/", "")
+  end
+  vim.cmd("G switch " .. branch)
+end
+
 function M.telescope_git_switch()
   require("telescope.builtin").git_branches({
     attach_mappings = function(prompt_bufnr, map)
-      local actions = require("telescope.actions")
-      local action_state = require("telescope.actions.state")
-      local function switch_branch()
-        local selection = action_state.get_selected_entry()
-        if not selection then
-          return
-        end
-        actions.close(prompt_bufnr)
-        local branch = selection.value
-        if branch:match("^origin/") then
-          branch = branch:gsub("^origin/", "")
-        elseif branch:match("^remotes/[^/]+/") then
-          branch = branch:gsub("^remotes/[^/]+/", "")
-        end
-        vim.cmd("G switch " .. branch)
-      end
-      map("i", "<CR>", switch_branch)
-      map("n", "<CR>", switch_branch)
+      map("i", "<CR>", M.switch_branch(prompt_bufnr))
+      map("n", "<CR>", M.switch_branch(prompt_bufnr))
       return true
     end,
   })
@@ -46,11 +48,7 @@ function M.smart_push()
     local cmd = "git push --set-upstream origin " .. branch
 
     vim.fn.setreg("+", cmd)
-    vim.api.nvim_echo({
-      { "⚠️  No upstream set! ", "WarningMsg" },
-      { "Command copied to clipboard: ", "Normal" },
-      { cmd, "Special" },
-    }, true, {})
+    logger.warn("No upstream set! Command copied to clipboard:\n" .. cmd, "Warning")
   else
     vim.cmd("G push")
   end

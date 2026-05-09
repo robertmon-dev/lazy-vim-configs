@@ -124,7 +124,7 @@ local keymaps = {
     { "<A-k>", ":m '<-2<cr>gv=gv", { desc = "Move block up" } },
 
     { "<leader>C", editor_funcs.toggle_comment_visual, { desc = "Toggle comment" } },
-    { "<leader>cn", "<cmd>CarbonNow<cr>", { desc = "Carbon Now (marked)" } },
+    { "<leader>cn", ":CarbonNow<cr>", { desc = "Carbon Now (marked)" } },
   },
 
   i = {
