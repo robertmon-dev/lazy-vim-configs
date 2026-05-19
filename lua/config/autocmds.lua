@@ -21,7 +21,7 @@ local autocmds = {
     },
   },
   {
-    "BufWritePost",
+    "BufWritePre",
     {
       callback = editor_funcs.format_lsp,
       desc = "Format with LSP after save",

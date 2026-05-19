@@ -9,7 +9,7 @@ return {
   lazy = false,
   keys = {
     { "<leader>e", "<cmd>Neotree toggle<cr>", desc = "Toggle file explorer" },
-    { "<leader>E", "<cmd>Neotree toggle<cr>", desc = "Toggle file explorer" },
+    { "<leader>EE", "<cmd>Neotree toggle reveal=true<cr>", desc = "Toggle & Reveal current file" },
   },
   opts = {
     enable_git_status = true,

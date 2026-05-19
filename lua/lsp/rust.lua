@@ -3,7 +3,7 @@ return {
     "mrcjkb/rustaceanvim",
     version = "^5",
     ft = { "rust" },
-    config = function()
+    init = function()
       vim.g.rustaceanvim = {
         server = {
           default_settings = {
@@ -38,7 +38,7 @@ return {
   },
   {
     "Saecki/crates.nvim",
-    event = { "BufRead Cargo.toml" },
+    event = { "BufRead Cargo.toml", "BufNewFile Cargo.toml" },
     config = function()
       require("crates").setup({})
     end,
