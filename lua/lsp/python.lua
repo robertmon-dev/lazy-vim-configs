@@ -5,6 +5,7 @@ return {
       pyright = {
         settings = {
           python = {
+            pythonPath = vim.fn.getcwd() .. "/venv/bin/python",
             analysis = {
               typeCheckingMode = "basic",
               autoSearchPaths = true,
