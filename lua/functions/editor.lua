@@ -85,4 +85,25 @@ function M.remote_nvim_callback(port, _)
   })
 end
 
+function M.flash_jump()
+  require("flash").jump()
+  Tele.debug("Flash jump executed.", "Editor")
+end
+
+function M.flash_treesitter()
+  require("flash").treesitter()
+end
+
+function M.flash_remote()
+  require("flash").remote()
+end
+
+function M.flash_treesitter_search()
+  require("flash").treesitter_search()
+end
+
+function M.flash_toggle()
+  require("flash").toggle()
+end
+
 return M
