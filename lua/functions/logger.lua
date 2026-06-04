@@ -53,12 +53,15 @@ end
 function M.debug(msg, title)
   M.log(msg, M.levels.DEBUG, title or "Debug")
 end
+
 function M.info(msg, title)
   M.log(msg, M.levels.INFO, title or "Info")
 end
+
 function M.warn(msg, title)
   M.log(msg, M.levels.WARN, title or "Warning")
 end
+
 function M.error(msg, title)
   M.log(msg, M.levels.ERROR, title or "Error")
 end
