@@ -90,6 +90,18 @@ function M.flash_jump()
   Tele.debug("Flash jump executed.", "Editor")
 end
 
+function M.flash_search_forward()
+  require("flash").jump({
+    search = { forward = true, wrap = false, multi_window = false },
+  })
+end
+
+function M.flash_search_backward()
+  require("flash").jump({
+    search = { forward = false, wrap = false, multi_window = false },
+  })
+end
+
 function M.flash_treesitter()
   require("flash").treesitter()
 end
