@@ -1,5 +1,5 @@
 local M = {}
-local Tele = _G.Tele or require("functions.logger")
+local logger = _G.Tele or require("functions.logger")
 
 function M.diagnostic_goto_prev()
   vim.diagnostic.jump({ count = -1, float = true })
@@ -52,12 +52,12 @@ function M.setup_neovide()
     vim.keymap.set({ "n", "v" }, key, func)
   end
 
-  Tele.info("Neovide GUI features initialized.", "GUI")
+  logger.info("Neovide GUI features initialized.", "GUI")
 end
 
 function M.trim_whitespace()
   vim.cmd([[%s/\s\+$//e]])
-  Tele.debug("Trailing whitespace trimmed.", "Editor")
+  logger.debug("Trailing whitespace trimmed.", "Editor")
 end
 
 function M.format_lsp(args)
@@ -67,7 +67,7 @@ end
 function M.check_readonly()
   if vim.bo.readonly then
     vim.defer_fn(function()
-      Tele.warn("File is READONLY! Sudo/Password required to save.", "File System")
+      logger.warn("File is READONLY! Sudo/Password required to save.", "File System")
     end, 500)
   end
 end
@@ -75,19 +75,19 @@ end
 function M.remote_nvim_callback(port, _)
   local cmd = ("nvim --server localhost:%s --remote-ui"):format(port)
 
-  Tele.info("Connecting to remote server on port " .. port, "Remote SSH")
+  logger.info("Connecting to remote server on port " .. port, "Remote SSH")
 
   vim.fn.jobstart(cmd, {
     detach = true,
     on_exit = function()
-      Tele.info("Disconnected from remote server.", "Remote SSH")
+      logger.info("Disconnected from remote server.", "Remote SSH")
     end,
   })
 end
 
 function M.flash_jump()
   require("flash").jump()
-  Tele.debug("Flash jump executed.", "Editor")
+  logger.debug("Flash jump executed.", "Editor")
 end
 
 function M.flash_search_forward()
