@@ -41,7 +41,7 @@ local autocmds = {
       pattern = "rust",
       desc = "Rustaceanvim specific keymaps",
       callback = function(event)
-        local rust_keymaps = {
+        local keymaps = {
           { "<leader>h", rust_funcs.hover_actions, { desc = "Rust Hover Actions" } },
           { "<leader>ca", rust_funcs.code_action, { desc = "Rust Code Action" } },
           { "<leader>cE", rust_funcs.explain_error, { desc = "Rust Explain Error" } },
@@ -50,7 +50,7 @@ local autocmds = {
           { "<leader>cM", rust_funcs.expand_macro, { desc = "Rust Expand Macro" } },
         }
 
-        utils.apply_buffer_keymaps(rust_keymaps, event.buf)
+        utils.apply_buffer_keymaps(keymaps, event.buf)
       end,
     },
   },
@@ -61,7 +61,7 @@ local autocmds = {
       pattern = "Cargo.toml",
       desc = "Crates.nvim specific keymaps",
       callback = function(event)
-        local crates_keymaps = {
+        local keymaps = {
           { "<leader>cv", crates.show_versions_popup, { desc = "Crates: Show versions" } },
           { "<leader>cf", crates.show_features_popup, { desc = "Crates: Show flags (features)" } },
           { "<leader>cd", crates.show_dependencies_popup, { desc = "Crates: Show dependencies" } },
@@ -73,7 +73,7 @@ local autocmds = {
           { "<leader>cR", crates.open_repository, { desc = "Crates: Show github of the crate" } },
         }
 
-        utils.apply_buffer_keymaps(crates_keymaps, event.buf)
+        utils.apply_buffer_keymaps(keymaps, event.buf)
       end,
     },
   },
