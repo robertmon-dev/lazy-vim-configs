@@ -57,3 +57,5 @@ if vim.g.neovide then
   vim.g.neovide_window_blurred = false
   vim.g.neovide_floating_shadow = false
 end
+
+vim.g.omni_sql_no_default_maps = 1
