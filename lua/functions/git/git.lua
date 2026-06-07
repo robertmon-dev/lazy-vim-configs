@@ -25,8 +25,14 @@ end
 function M.telescope_git_switch()
   require("telescope.builtin").git_branches({
     attach_mappings = function(prompt_bufnr, map)
-      map("i", "<CR>", M.switch_branch(prompt_bufnr))
-      map("n", "<CR>", M.switch_branch(prompt_bufnr))
+      map("i", "<CR>", function()
+        M.switch_branch(prompt_bufnr)
+      end)
+
+      map("n", "<CR>", function()
+        M.switch_branch(prompt_bufnr)
+      end)
+
       return true
     end,
   })
