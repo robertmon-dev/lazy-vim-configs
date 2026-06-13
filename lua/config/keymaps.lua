@@ -62,6 +62,7 @@ local keymaps = {
     { "<A-Right>", "<C-w>l", { desc = "Go to right window" } },
 
     { "<leader>gb", git_funcs.create_branch, { desc = "Git create new branch" } },
+    { "<leader>gB", "<cmd>Git blame<cr>", { desc = "Git blame (Fugitive)" } },
     { "<leader>gs", "<cmd>G<cr>", { desc = "Git status" } },
     { "<leader>gd", "<cmd>Gdiffsplit<cr>", { desc = "Git diff" } },
     { "<leader>ga", "<cmd>Gwrite<cr>", { desc = "Git add (current buffer)" } },
@@ -78,6 +79,7 @@ local keymaps = {
       "<cmd>GDelete<cr>",
       { desc = "Git remove (current file)" },
     },
+    { "<leader>grr", "<cmd>Gread<cr>", { desc = "Git read (revert current file)" } },
     {
       "<leader>gh",
       git_funcs.telescope_git_commits,
@@ -91,6 +93,7 @@ local keymaps = {
     { "<leader>gM", "<cmd>G switch main<cr>", { desc = "Git switch main" } },
     { "<leader>gRm", "<cmd>G rebase origin/main<cr>", { desc = "Git rebase main" } },
     { "<leader>gU", "<cmd>G add -u<cr>", { desc = "Git add -u" } },
+    { "<leader>gV", "<cmd>Gvdiffsplit!<cr>", { desc = "Git resolve conflicts (3-way)" } },
     {
       "<leader>gu",
       "<cmd>G reset HEAD %<cr>",
