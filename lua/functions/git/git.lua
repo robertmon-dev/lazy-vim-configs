@@ -3,6 +3,14 @@ local logger = require("functions.logger")
 local actions = require("telescope.actions")
 local action_state = require("telescope.actions.state")
 
+function M.telescope_git_commits()
+  require("telescope.builtin").git_commits()
+end
+
+function M.telescope_git_bcommits()
+  require("telescope.builtin").git_bcommits()
+end
+
 function M.telescope_git_branches()
   require("telescope.builtin").git_branches()
 end
