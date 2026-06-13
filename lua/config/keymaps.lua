@@ -78,6 +78,16 @@ local keymaps = {
       "<cmd>GDelete<cr>",
       { desc = "Git remove (current file)" },
     },
+    {
+      "<leader>gh",
+      git_funcs.telescope_git_commits,
+      { desc = "Git commits history (Telescope)" },
+    },
+    {
+      "<leader>gH",
+      git_funcs.telescope_git_bcommits,
+      { desc = "Git buffer commits (Telescope)" },
+    },
     { "<leader>gM", "<cmd>G switch main<cr>", { desc = "Git switch main" } },
     { "<leader>gRm", "<cmd>G rebase origin/main<cr>", { desc = "Git rebase main" } },
     { "<leader>gU", "<cmd>G add -u<cr>", { desc = "Git add -u" } },
