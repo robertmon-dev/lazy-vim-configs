@@ -66,6 +66,17 @@ function M.smart_push()
   else
     vim.cmd("G push")
   end
+
+  function M.copy_branch_name()
+    local branch = vim.fn.system("git branch --show-current"):gsub("%s+", "")
+
+    if branch and branch ~= "" then
+      vim.fn.setreg("+", branch)
+      logger.info("You have copied the name of current branch", "Git")
+    else
+      logger.warn("You are not even in a Git repository!", "Warning")
+    end
+  end
 end
 
 return M

@@ -1,5 +1,7 @@
 {
   "extras": [
+    "lazyvim.plugins.extras.lang.typescript",
+    "lazyvim.plugins.extras.formatting.prettier",
     "lazyvim.plugins.extras.lang.cmake",
     "lazyvim.plugins.extras.lang.git",
     "lazyvim.plugins.extras.lang.go",
@@ -22,3 +24,4 @@
   },
   "version": 8
 }
+

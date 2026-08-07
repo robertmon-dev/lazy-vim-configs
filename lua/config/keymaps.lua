@@ -127,6 +127,11 @@ local keymaps = {
       "<cmd>G reset HEAD~1<cr>",
       { desc = "Git undo last commit (reset HEAD~1)" },
     },
+    {
+      "<leader>gy",
+      git_funcs.copy_branch_name,
+      { desc = "Git copy branch name to clipboard" },
+    },
   },
 
   v = {
