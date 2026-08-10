@@ -18,40 +18,43 @@ local function get_float_geometry()
   }
 end
 
+local function do_pin(buf)
+  if not vim.api.nvim_buf_is_valid(buf) then
+    return
+  end
+  if vim.bo[buf].filetype ~= "gitcommit" then
+    return
+  end
+
+  local win = vim.fn.bufwinid(buf)
+  if win == -1 then
+    return
+  end
+  if win == state.win then
+    return
+  end
+
+  local geometry = get_float_geometry()
+
+  if state.win and vim.api.nvim_win_is_valid(state.win) then
+    vim.api.nvim_win_close(win, false)
+    vim.api.nvim_win_set_buf(state.win, buf)
+    vim.api.nvim_win_set_config(state.win, geometry)
+    vim.api.nvim_set_current_win(state.win)
+  else
+    vim.api.nvim_win_close(win, false)
+    state.win = vim.api.nvim_open_win(buf, true, geometry)
+  end
+
+  vim.wo[state.win].winblend = 0
+  vim.bo[buf].bufhidden = "wipe"
+end
+
+local schedule_pin = vim.schedule_wrap(do_pin)
+
 function M.pin_gitcommit_window(event)
   local buf = event and event.buf or vim.api.nvim_get_current_buf()
-
-  vim.schedule(function()
-    if not vim.api.nvim_buf_is_valid(buf) then
-      return
-    end
-    if vim.bo[buf].filetype ~= "gitcommit" then
-      return
-    end
-
-    local win = vim.fn.bufwinid(buf)
-    if win == -1 then
-      return
-    end
-    if win == state.win then
-      return
-    end
-
-    local geometry = get_float_geometry()
-
-    if state.win and vim.api.nvim_win_is_valid(state.win) then
-      vim.api.nvim_win_close(win, false)
-      vim.api.nvim_win_set_buf(state.win, buf)
-      vim.api.nvim_win_set_config(state.win, geometry)
-      vim.api.nvim_set_current_win(state.win)
-    else
-      vim.api.nvim_win_close(win, false)
-      state.win = vim.api.nvim_open_win(buf, true, geometry)
-    end
-
-    vim.wo[state.win].winblend = 0
-    vim.bo[buf].bufhidden = "wipe"
-  end)
+  schedule_pin(buf)
 end
 
 return M
