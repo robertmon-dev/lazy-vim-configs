@@ -2,6 +2,7 @@ local crates = require("crates")
 local utils = require("functions.utils")
 local editor_funcs = require("functions.editor")
 local rust_funcs = require("functions.rust_actions")
+local window_funcs = require("functions.windows")
 
 local my_group = vim.api.nvim_create_augroup("MyAutocmds", { clear = true })
 
@@ -26,6 +27,14 @@ local autocmds = {
       pattern = "*",
       callback = editor_funcs.check_readonly,
       desc = "Show warning for readonly files",
+    },
+  },
+  {
+    "FileType",
+    {
+      pattern = "gitcommit",
+      desc = "Pin commit window to fixed floating position",
+      callback = window_funcs.pin_gitcommit_window,
     },
   },
   {
