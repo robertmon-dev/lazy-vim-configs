@@ -27,5 +27,4 @@ function M.get_efm_config()
     },
   }
 end
-
 return M
