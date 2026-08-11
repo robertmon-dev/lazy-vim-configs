@@ -37,14 +37,12 @@ local function do_pin(buf)
   local geometry = get_float_geometry()
 
   if state.win and vim.api.nvim_win_is_valid(state.win) then
-    vim.api.nvim_win_close(win, false)
-    vim.api.nvim_win_set_buf(state.win, buf)
-    vim.api.nvim_win_set_config(state.win, geometry)
-    vim.api.nvim_set_current_win(state.win)
-  else
-    vim.api.nvim_win_close(win, false)
-    state.win = vim.api.nvim_open_win(buf, true, geometry)
+    vim.api.nvim_win_close(state.win, false)
   end
+
+  vim.api.nvim_win_set_config(win, geometry)
+  vim.api.nvim_set_current_win(win)
+  state.win = win
 
   vim.wo[state.win].winblend = 0
   vim.bo[buf].bufhidden = "wipe"
