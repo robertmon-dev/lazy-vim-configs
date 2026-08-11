@@ -2,7 +2,7 @@ local crates = require("crates")
 local utils = require("functions.utils")
 local editor_funcs = require("functions.editor")
 local rust_funcs = require("functions.rust_actions")
-local window_funcs = require("functions.windows")
+local window_funcs = require("functions.windows.pin")
 
 local my_group = vim.api.nvim_create_augroup("MyAutocmds", { clear = true })
 
