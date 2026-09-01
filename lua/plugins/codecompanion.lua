@@ -42,8 +42,8 @@ return {
     })
   end,
   keys = {
-    { "<leader>ca", ai_funcs.open_actions, mode = { "n", "v" }, desc = "CodeCompanion Actions" },
-    { "<leader>cc", ai_funcs.toggle_chat, mode = { "n", "v" }, desc = "CodeCompanion Chat" },
+    { "<leader>cca", ai_funcs.open_actions, mode = { "n", "v" }, desc = "CodeCompanion Actions" },
+    { "<leader>cco", ai_funcs.toggle_chat, mode = { "n", "v" }, desc = "CodeCompanion Chat" },
     { "ga", ai_funcs.add_to_chat, mode = "v", desc = "CodeCompanion Add to Chat" },
     { "<leader>gcc", ai_funcs.ai_commit, mode = "n", desc = "AI Git Commit" },
   },

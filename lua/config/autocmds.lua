@@ -56,7 +56,6 @@ local autocmds = {
       end,
     },
   },
-
   {
     { "BufRead", "BufNewFile" },
     {
