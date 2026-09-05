@@ -4,6 +4,7 @@ local utils = require("functions.utils")
 local git_funcs = require("functions.git.git")
 local git_ai_funcs = require("functions.git.git_ai_commit")
 local editor_funcs = require("functions.editor")
+local search_funcs = require("functions.search")
 
 vim.g.mapleader = " "
 vim.o.timeoutlen = 300
@@ -132,6 +133,10 @@ local keymaps = {
       git_funcs.copy_branch_name,
       { desc = "Git copy branch name to clipboard" },
     },
+    { "<leader>fw", "<cmd>Telescope live_grep<cr>", { desc = "Find text in project (Ripgrep)" } },
+    { "<leader>fc", "<cmd>Telescope grep_string<cr>", { desc = "Find word under cursor (Ripgrep)" } },
+    { "<leader>ff", "<cmd>Telescope find_files<cr>", { desc = "Find files" } },
+    { "<leader>fb", "<cmd>Telescope buffers<cr>", { desc = "Find buffers" } },
   },
 
   v = {
@@ -143,6 +148,11 @@ local keymaps = {
 
     { "<leader>C", editor_funcs.toggle_comment_visual, { desc = "Toggle comment" } },
     { "<leader>cn", ":CarbonNow<cr>", { desc = "Carbon Now (marked)" } },
+    {
+      "<leader>fw",
+      search_funcs.search_visual_selection,
+      { desc = "Find visual selection (Ripgrep)" },
+    },
   },
 
   i = {
