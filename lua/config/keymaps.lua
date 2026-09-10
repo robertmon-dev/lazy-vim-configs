@@ -148,6 +148,7 @@ local keymaps = {
 
     { "<leader>C", editor_funcs.toggle_comment_visual, { desc = "Toggle comment" } },
     { "<leader>cn", ":CarbonNow<cr>", { desc = "Carbon Now (marked)" } },
+
     {
       "<leader>fw",
       search_funcs.search_visual_selection,
