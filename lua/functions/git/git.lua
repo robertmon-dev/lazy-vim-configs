@@ -11,10 +11,6 @@ function M.telescope_git_bcommits()
   require("telescope.builtin").git_bcommits()
 end
 
-function M.telescope_git_branches()
-  require("telescope.builtin").git_branches()
-end
-
 function M.switch_branch(prompt_bufnr)
   local selection = action_state.get_selected_entry()
   if not selection then
@@ -40,6 +36,52 @@ function M.telescope_git_switch()
       map("n", "<CR>", function()
         M.switch_branch(prompt_bufnr)
       end)
+
+      return true
+    end,
+  })
+end
+
+function M.telescope_git_branches()
+  require("telescope.builtin").git_branches({
+    attach_mappings = function(prompt_bufnr, map)
+      local function delete_branch()
+        local selection = action_state.get_selected_entry()
+        if not selection then
+          return
+        end
+
+        local branch = selection.value
+        local is_current = branch:match("^%*")
+        local clean_branch = branch:gsub("^%*%s*", "")
+
+        if is_current then
+          logger.warn("You cannot delete the currently checked out branch", "Warning")
+          return
+        end
+
+        if clean_branch:match("^origin/") or clean_branch:match("^remotes/") then
+          logger.warn("Remote branches cannot be deleted from here", "Warning")
+          return
+        end
+
+        local choice = vim.fn.confirm("Delete branch '" .. clean_branch .. "'?", "&Yes\n&No", 2)
+
+        if choice == 1 then
+          local result = vim.fn.system("git branch -D " .. clean_branch)
+
+          if vim.v.shell_error ~= 0 then
+            logger.warn("Failed to delete branch:\n" .. result, "Error")
+          else
+            logger.info("Branch '" .. clean_branch .. "' deleted", "Git")
+            actions.close(prompt_bufnr)
+            vim.defer_fn(M.telescope_git_branches, 50)
+          end
+        end
+      end
+
+      map("i", "<C-d>", delete_branch)
+      map("n", "<C-d>", delete_branch)
 
       return true
     end,
