@@ -138,13 +138,12 @@ function M.perform_move(shas, source_branch, target_branch)
   end
   vim.cmd("G checkout " .. source_branch)
 
-  vim.ui.input({ prompt = "Drop these commits from " .. source_branch .. "? (y/n): " }, function(answer)
-    if answer == "y" then
-      M.drop_commits(shas, source_branch)
-    else
-      logger.info("Copied to " .. target_branch .. ", originals kept on " .. source_branch, "Git move")
-    end
-  end)
+  local choice = vim.fn.confirm("Drop these commits from " .. source_branch .. "?", "&Yes\n&No", 2)
+  if choice == 1 then
+    M.drop_commits(shas, source_branch)
+  else
+    logger.info("Copied to " .. target_branch .. ", originals kept on " .. source_branch, "Git move")
+  end
 end
 
 function M.drop_commits(shas, source_branch)
@@ -175,14 +174,11 @@ function M.delete_commits()
   local current_branch = vim.fn.system("git branch --show-current"):gsub("%s+", "")
 
   M.pick_commits(function(shas)
-    vim.ui.input(
-      { prompt = "Delete " .. #shas .. " commit(s) from " .. current_branch .. "? (y/n): " },
-      function(answer)
-        if answer == "y" then
-          M.drop_commits(shas, current_branch)
-        end
-      end
-    )
+    local choice = vim.fn.confirm("Delete " .. #shas .. " commit(s) from " .. current_branch .. "?", "&Yes\n&No", 2)
+
+    if choice == 1 then
+      M.drop_commits(shas, current_branch)
+    end
   end)
 end
 
