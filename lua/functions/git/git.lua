@@ -2,6 +2,7 @@ local M = {}
 local logger = require("functions.logger")
 local actions = require("telescope.actions")
 local action_state = require("telescope.actions.state")
+local dialog = require("functions.windows.dialog")
 
 function M.telescope_git_commits()
   require("telescope.builtin").git_commits()
@@ -65,9 +66,7 @@ function M.telescope_git_branches()
           return
         end
 
-        local choice = vim.fn.confirm("Delete branch '" .. clean_branch .. "'?", "&Yes\n&No", 2)
-
-        if choice == 1 then
+        if dialog.ask("Delete branch '" .. clean_branch .. "'?") then
           local result = vim.fn.system("git branch -D " .. clean_branch)
 
           if vim.v.shell_error ~= 0 then
@@ -124,7 +123,7 @@ end
 function M.pick_commits(callback)
   require("telescope.builtin").git_bcommits({
     attach_mappings = function(prompt_bufnr, map)
-      local function confirm()
+      local function confirm_picker()
         local picker = action_state.get_current_picker(prompt_bufnr)
         local selections = picker:get_multi_selection()
         if vim.tbl_isempty(selections) then
@@ -143,8 +142,8 @@ function M.pick_commits(callback)
 
         callback(shas)
       end
-      map("i", "<CR>", confirm)
-      map("n", "<CR>", confirm)
+      map("i", "<CR>", confirm_picker)
+      map("n", "<CR>", confirm_picker)
       return true
     end,
   })
@@ -180,8 +179,7 @@ function M.perform_move(shas, source_branch, target_branch)
   end
   vim.cmd("G checkout " .. source_branch)
 
-  local choice = vim.fn.confirm("Drop these commits from " .. source_branch .. "?", "&Yes\n&No", 2)
-  if choice == 1 then
+  if dialog.ask("Drop these commits from " .. source_branch .. "?") then
     M.drop_commits(shas, source_branch)
   else
     logger.info("Copied to " .. target_branch .. ", originals kept on " .. source_branch, "Git move")
@@ -216,9 +214,7 @@ function M.delete_commits()
   local current_branch = vim.fn.system("git branch --show-current"):gsub("%s+", "")
 
   M.pick_commits(function(shas)
-    local choice = vim.fn.confirm("Delete " .. #shas .. " commit(s) from " .. current_branch .. "?", "&Yes\n&No", 2)
-
-    if choice == 1 then
+    if dialog.ask("Delete " .. #shas .. " commit(s) from " .. current_branch .. "?") then
       M.drop_commits(shas, current_branch)
     end
   end)
