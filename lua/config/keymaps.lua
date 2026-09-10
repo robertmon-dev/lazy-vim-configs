@@ -141,6 +141,7 @@ local keymaps = {
     { "<leader>fc", "<cmd>Telescope grep_string<cr>", { desc = "Find word under cursor (Ripgrep)" } },
     { "<leader>ff", "<cmd>Telescope find_files<cr>", { desc = "Find files" } },
     { "<leader>fb", "<cmd>Telescope buffers<cr>", { desc = "Find buffers" } },
+    { "<leader>fr", "<cmd>Telescope lsp_references<cr>", { desc = "Find references (Telescope)" } },
   },
 
   v = {
