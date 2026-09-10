@@ -52,27 +52,26 @@ function M.telescope_git_branches()
           return
         end
 
-        local branch = selection.value
-        local is_current = branch:match("^%*")
-        local clean_branch = branch:gsub("^%*%s*", "")
+        local target_branch = selection.value
+        local current_branch = vim.fn.system("git branch --show-current"):gsub("%s+", "")
 
-        if is_current then
+        if target_branch == current_branch then
           logger.warn("You cannot delete the currently checked out branch", "Warning")
           return
         end
 
-        if clean_branch:match("^origin/") or clean_branch:match("^remotes/") then
+        if target_branch:match("^origin/") or target_branch:match("^remotes/") then
           logger.warn("Remote branches cannot be deleted from here", "Warning")
           return
         end
 
-        if dialog.ask("Delete branch '" .. clean_branch .. "'?") then
-          local result = vim.fn.system("git branch -D " .. clean_branch)
+        if dialog.ask("Delete branch '" .. target_branch .. "'?") then
+          local result = vim.fn.system("git branch -D " .. target_branch)
 
           if vim.v.shell_error ~= 0 then
             logger.warn("Failed to delete branch:\n" .. result, "Error")
           else
-            logger.info("Branch '" .. clean_branch .. "' deleted", "Git")
+            logger.info("Branch '" .. target_branch .. "' deleted", "Git")
             actions.close(prompt_bufnr)
             vim.defer_fn(M.telescope_git_branches, 50)
           end
