@@ -133,7 +133,10 @@ local keymaps = {
       git_funcs.copy_branch_name,
       { desc = "Git copy branch name to clipboard" },
     },
+
     { "<leader>gm", git_funcs.move_commits_to_branch, { desc = "Git move commits to branch" } },
+    { "<leader>gD", git_funcs.delete_commits(), { desc = "  Git remove commits from branch " } },
+
     { "<leader>fw", "<cmd>Telescope live_grep<cr>", { desc = "Find text in project (Ripgrep)" } },
     { "<leader>fc", "<cmd>Telescope grep_string<cr>", { desc = "Find word under cursor (Ripgrep)" } },
     { "<leader>ff", "<cmd>Telescope find_files<cr>", { desc = "Find files" } },

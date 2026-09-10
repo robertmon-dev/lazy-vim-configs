@@ -14,16 +14,20 @@ end
 
 function M.switch_branch(prompt_bufnr)
   local selection = action_state.get_selected_entry()
+
   if not selection then
     return
   end
+
   actions.close(prompt_bufnr)
+
   local branch = selection.value
   if branch:match("^origin/") then
     branch = branch:gsub("^origin/", "")
   elseif branch:match("^remotes/[^/]+/") then
     branch = branch:gsub("^remotes/[^/]+/", "")
   end
+
   vim.cmd("G switch " .. branch)
 end
 
