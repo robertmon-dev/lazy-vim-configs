@@ -73,9 +73,95 @@ function M.copy_branch_name()
 
   if branch and branch ~= "" then
     vim.fn.setreg("+", branch)
-    logger.info("You have copied the name of current branch", "Git")
+    logger.info("Current branch name copied to clipboard", "Git")
   else
-    logger.warn("You are not even in a Git repository!", "Warning")
+    logger.warn("You are not in a Git repository", "Warning")
+  end
+end
+
+function M.move_commits_to_branch()
+  local current_branch = vim.fn.system("git branch --show-current"):gsub("%s+", "")
+  local all_branches = vim.fn.systemlist("git branch --format='%(refname:short)'")
+  local targets = vim.tbl_filter(function(b)
+    return b ~= current_branch
+  end, all_branches)
+
+  vim.ui.select(targets, { prompt = "Move commits to branch:" }, function(target)
+    if not target then
+      return
+    end
+
+    require("telescope.builtin").git_bcommits({
+      attach_mappings = function(prompt_bufnr, map)
+        local function confirm()
+          local picker = action_state.get_current_picker(prompt_bufnr)
+          local selections = picker:get_multi_selection()
+          if vim.tbl_isempty(selections) then
+            selections = { action_state.get_selected_entry() }
+          end
+          actions.close(prompt_bufnr)
+
+          local shas = {}
+          for _, entry in ipairs(selections) do
+            table.insert(shas, entry.value)
+          end
+          table.sort(shas, function(a, b)
+            return tonumber(vim.fn.system("git show -s --format=%ct " .. a))
+              < tonumber(vim.fn.system("git show -s --format=%ct " .. b))
+          end)
+
+          M.perform_move(shas, current_branch, target)
+        end
+        map("i", "<CR>", confirm)
+        map("n", "<CR>", confirm)
+        return true
+      end,
+    })
+  end)
+end
+
+function M.perform_move(shas, source_branch, target_branch)
+  vim.cmd("G checkout " .. target_branch)
+  for _, sha in ipairs(shas) do
+    local result = vim.fn.system("git cherry-pick " .. sha)
+    if vim.v.shell_error ~= 0 then
+      logger.warn("Cherry-pick failed on " .. sha .. ":\n" .. result, "Git move")
+      vim.cmd("G checkout " .. source_branch)
+      return
+    end
+  end
+  vim.cmd("G checkout " .. source_branch)
+
+  vim.ui.input({ prompt = "Drop these commits from " .. source_branch .. "? (y/n): " }, function(answer)
+    if answer == "y" then
+      M.drop_commits(shas, source_branch)
+    else
+      logger.info("Copied to " .. target_branch .. ", originals kept on " .. source_branch, "Git move")
+    end
+  end)
+end
+
+function M.drop_commits(shas, source_branch)
+  local short_shas = {}
+  for _, sha in ipairs(shas) do
+    table.insert(short_shas, sha:sub(1, 7))
+  end
+
+  local sed_parts = { "sed", "-i" }
+  for _, sha in ipairs(short_shas) do
+    table.insert(sed_parts, "-e")
+    table.insert(sed_parts, "'/^pick " .. sha .. "/s/^pick/drop/'")
+  end
+  local sequence_editor = table.concat(sed_parts, " ")
+
+  local base = vim.fn.system("git rev-parse " .. shas[1] .. "^"):gsub("%s+", "")
+  local cmd = 'GIT_SEQUENCE_EDITOR="' .. sequence_editor .. '" git rebase -i ' .. base
+
+  local result = vim.fn.system(cmd)
+  if vim.v.shell_error ~= 0 then
+    logger.warn("Rebase (drop) failed:\n" .. result, "Git move")
+  else
+    logger.info("Commits dropped from " .. source_branch, "Git move")
   end
 end
 
