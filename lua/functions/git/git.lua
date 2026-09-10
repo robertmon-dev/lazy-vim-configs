@@ -79,6 +79,35 @@ function M.copy_branch_name()
   end
 end
 
+function M.pick_commits(callback)
+  require("telescope.builtin").git_bcommits({
+    attach_mappings = function(prompt_bufnr, map)
+      local function confirm()
+        local picker = action_state.get_current_picker(prompt_bufnr)
+        local selections = picker:get_multi_selection()
+        if vim.tbl_isempty(selections) then
+          selections = { action_state.get_selected_entry() }
+        end
+        actions.close(prompt_bufnr)
+
+        local shas = {}
+        for _, entry in ipairs(selections) do
+          table.insert(shas, entry.value)
+        end
+        table.sort(shas, function(a, b)
+          return tonumber(vim.fn.system("git show -s --format=%ct " .. a))
+            < tonumber(vim.fn.system("git show -s --format=%ct " .. b))
+        end)
+
+        callback(shas)
+      end
+      map("i", "<CR>", confirm)
+      map("n", "<CR>", confirm)
+      return true
+    end,
+  })
+end
+
 function M.move_commits_to_branch()
   local current_branch = vim.fn.system("git branch --show-current"):gsub("%s+", "")
   local all_branches = vim.fn.systemlist("git branch --format='%(refname:short)'")
@@ -91,32 +120,9 @@ function M.move_commits_to_branch()
       return
     end
 
-    require("telescope.builtin").git_bcommits({
-      attach_mappings = function(prompt_bufnr, map)
-        local function confirm()
-          local picker = action_state.get_current_picker(prompt_bufnr)
-          local selections = picker:get_multi_selection()
-          if vim.tbl_isempty(selections) then
-            selections = { action_state.get_selected_entry() }
-          end
-          actions.close(prompt_bufnr)
-
-          local shas = {}
-          for _, entry in ipairs(selections) do
-            table.insert(shas, entry.value)
-          end
-          table.sort(shas, function(a, b)
-            return tonumber(vim.fn.system("git show -s --format=%ct " .. a))
-              < tonumber(vim.fn.system("git show -s --format=%ct " .. b))
-          end)
-
-          M.perform_move(shas, current_branch, target)
-        end
-        map("i", "<CR>", confirm)
-        map("n", "<CR>", confirm)
-        return true
-      end,
-    })
+    M.pick_commits(function(shas)
+      M.perform_move(shas, current_branch, target)
+    end)
   end)
 end
 
@@ -163,6 +169,21 @@ function M.drop_commits(shas, source_branch)
   else
     logger.info("Commits dropped from " .. source_branch, "Git move")
   end
+end
+
+function M.delete_commits()
+  local current_branch = vim.fn.system("git branch --show-current"):gsub("%s+", "")
+
+  M.pick_commits(function(shas)
+    vim.ui.input(
+      { prompt = "Delete " .. #shas .. " commit(s) from " .. current_branch .. "? (y/n): " },
+      function(answer)
+        if answer == "y" then
+          M.drop_commits(shas, current_branch)
+        end
+      end
+    )
+  end)
 end
 
 return M
