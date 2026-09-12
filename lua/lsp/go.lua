@@ -1,5 +1,14 @@
 return {
   "neovim/nvim-lspconfig",
+  init_options = {
+    command = {
+      "golangci-lint",
+      "run",
+      "--output.json.path=stdout",
+      "--path-mode=abs",
+      "--allow-parallel-runners",
+    },
+  },
   opts = {
     servers = {
       gopls = {
@@ -36,6 +45,21 @@ return {
               tidy = true,
               upgrade_dependency = true,
             },
+          },
+        },
+      },
+      golangci_lint_ls = {
+        cmd = { "golangci-lint-langserver" },
+        filetypes = { "go" },
+        flags = {
+          debounce_text_changes = 1000,
+        },
+        init_options = {
+          command = {
+            "golangci-lint",
+            "run",
+            "--output.json.path=stdout",
+            "--path-mode=abs",
           },
         },
       },
