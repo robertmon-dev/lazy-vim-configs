@@ -4,6 +4,8 @@
 
 ## Preview
 
+![Preview](lua/docs/screenshots/preview_1.png)
+
 ## Key Features
 
 * **Embedded AI Engine:** Ships a prebuilt [`nvim-ai-engine`](bin/nvim-ai-engine) binary (built from [nvim-engine](https://github.com/robertmon-dev/nvim-engine)), launched over MessagePack-RPC (`lua/functions/ai/bridge.lua`) for non-blocking LLM requests.
