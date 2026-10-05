@@ -13,7 +13,6 @@ local default_opts = { silent = true }
 local keymaps = {
   n = {
     { "<Tab>", ">>" },
-
     { "<S-Tab>", "<<" },
 
     { "<leader>S", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]], { desc = "Replace word under cursor" } },
