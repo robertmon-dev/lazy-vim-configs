@@ -72,7 +72,3 @@ vim.g.ai_engine_bin_path = "/path/to/nvim-ai-engine"
 * **Check plugin/LSP health:** `:Lazy` and `:checkhealth` inside Neovim
 * **Inspect AI engine logs:** `:Tele` helpers in `lua/functions/logger.lua`, or the engine's own log file (see `nvim-engine`'s README, `/tmp/nvim-engine.log`)
 * **Reload config after changes:** `:source %` on the edited file, or restart Neovim
-
-## Support
-
-AI engine runtime errors and warnings surface as Neovim notifications via `lua/functions/ai/bridge.lua`. For deeper issues, check the engine's own log file, or open an issue on the [nvim-engine](https://github.com/robertmon-dev/nvim-engine) repo if the problem is in the Go binary rather than this Lua config.
