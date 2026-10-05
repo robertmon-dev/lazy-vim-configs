@@ -36,7 +36,7 @@ The `nvim-ai-engine` binary under `bin/` is prebuilt; to rebuild it from source,
 ## Configuration
 
 ### Environment Variables
-The AI engine reads provider API keys from the environment (set in your `.zshrc`/`.bashrc`, or override the binary path):
+The AI engine reads provider API keys from the environment (set in your `.zshrc`/`.bashrc`/`config.fish`, or override the binary path):
 
 ```bash
 export ANTHROPIC_API_KEYS="<pass your keys>"
